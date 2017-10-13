@@ -1,14 +1,20 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.Random;
 
 public class GeneticAlgorithm {
 
-    double minimum = 0.0, maximum, crossoverP = 0.4, mutationP = 0.1;
-    ArrayList<Chromosome> population;
-    ArrayList<Chromosome> offsprings;
-    ReplacementStrategy replacer;
+    private int minimum = 0, maximum, chromosomeLength, maxGenerations;
+    private double crossoverP = 0.4, mutationP = 0.1;
+    private ArrayList<Chromosome> population, selected, offsprings;
+    private ReplacementStrategy replacer;
 
-    public GeneticAlgorithm(double minimum, double maximum, double crossoverP, double mutationP, ArrayList<Chromosome> population, ArrayList<Chromosome> offsprings, ReplacementStrategy replacer) {
+    public GeneticAlgorithm()
+    {
+
+    }
+
+    public GeneticAlgorithm(int minimum, int maximum, double crossoverP, double mutationP, ArrayList<Chromosome> population, ArrayList<Chromosome> offsprings, ReplacementStrategy replacer) {
         this.minimum = minimum;
         this.maximum = maximum;
         this.crossoverP = crossoverP;
@@ -18,19 +24,35 @@ public class GeneticAlgorithm {
         this.replacer = replacer;
     }
 
-    public double getMinimum() {
+    public int getChromosomeLength() {
+        return chromosomeLength;
+    }
+
+    public void setChromosomeLength(int chromosomeLength) {
+        this.chromosomeLength = chromosomeLength;
+    }
+
+    public int getMaxGenerations() {
+        return maxGenerations;
+    }
+
+    public void setMaxGenerations(int maxGenerations) {
+        this.maxGenerations = maxGenerations;
+    }
+
+    public int getMinimum() {
         return minimum;
     }
 
-    public void setMinimum(double minimum) {
+    public void setMinimum(int minimum) {
         this.minimum = minimum;
     }
 
-    public double getMaximum() {
+    public int getMaximum() {
         return maximum;
     }
 
-    public void setMaximum(double maximum) {
+    public void setMaximum(int maximum) {
         this.maximum = maximum;
     }
 
@@ -58,6 +80,14 @@ public class GeneticAlgorithm {
         this.population = population;
     }
 
+    public ArrayList<Chromosome> getSelected() {
+        return selected;
+    }
+
+    public void setSelected(ArrayList<Chromosome> selected) {
+        this.selected = selected;
+    }
+
     public ArrayList<Chromosome> getOffsprings() {
         return offsprings;
     }
@@ -74,32 +104,78 @@ public class GeneticAlgorithm {
         this.replacer = replacer;
     }
 
-    public void init()
+    public void init(Chromosome temp)
     {
-
+        for(int i=0; i<maximum; i++)
+        {
+            temp = temp.init();
+            population.add(temp);
+        }
+        chromosomeLength = population.get(0).genes.size();
     }
 
-    public void selection()
+    private void selection()
     {
+        TreeMap<Double,Chromosome> cumulativetree= new TreeMap<>();
+        double range = 0;
 
+        for (Chromosome c : population) {
+            cumulativetree.put(range, c);
+            range += c.fitness();
+        }
+
+        Random rand = new Random();
+        for(int i=0; i<population.size(); i++)
+        {
+            double n = rand.nextInt((int)range);
+            selected.add(cumulativetree.get(cumulativetree.floorKey(n)));
+        }
     }
 
-    public void crossover()
+    private void crossover()
     {
-
+        Random rand = new Random();
+        ArrayList<Chromosome> children;
+        for(int i=0; i<selected.size(); i+=2)
+        {
+            if(Math.random() <= crossoverP)
+            {
+                int index = rand.nextInt(chromosomeLength-1) + 1;
+                children = selected.get(i).crossover(selected.get(i+1), index);
+                offsprings.add(children.get(0));
+                offsprings.add(children.get(1));
+            }
+            else
+            {
+                offsprings.add(selected.get(i));
+                offsprings.add(selected.get(i+1));
+            }
+        }
     }
 
-    public void mutation()
+    private void mutation()
     {
-
+        for (Chromosome offspring : offsprings) {
+            for (int j = 0; j < chromosomeLength; j++) {
+                if (Math.random() <= mutationP)
+                    offspring.flip(j);
+            }
+        }
     }
 
-    public void replacement()
+    private void replacement()
     {
         population = replacer.replace(population, offsprings);
     }
 
-    public static void main(String[] args) {
-        // write your code here
+    public void run()
+    {
+        for(int i=0; i<maxGenerations; i++)
+        {
+            selection();
+            crossover();
+            mutation();
+            replacement();
+        }
     }
 }

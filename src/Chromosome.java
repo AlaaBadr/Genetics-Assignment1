@@ -16,7 +16,7 @@ public abstract class Chromosome<T> {
 
     public abstract double fitness();
 
-    public abstract void flip();
+    public abstract void flip(int index);
 
     public ArrayList<Chromosome> crossover(Chromosome<T> chromosome, int index)
     {
