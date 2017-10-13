@@ -12,6 +12,8 @@ public abstract class Chromosome<T> {
         this.genes = genes;
     }
 
+    public abstract Chromosome<T> init();
+
     public abstract double fitness();
 
     public abstract void flip();
