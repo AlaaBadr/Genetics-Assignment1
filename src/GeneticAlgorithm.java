@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public abstract class GeneticAlgorithm {
 
-    double minimum = 0.0,maximum,crossoverP = 0.4, mutationP = 0.1;
+    double minimum = 0.0, maximum, crossoverP = 0.4, mutationP = 0.1;
 
     ArrayList<Chromosome> population;
 
