@@ -120,7 +120,10 @@ public class GeneticAlgorithm {
         double range = 0;
 
         for (Chromosome c : population) {
-            cumulativetree.put(range, c);
+            if(c.fitness() != 0)
+            {
+                cumulativetree.put(range, c);
+            }
             range += c.fitness();
         }
 
