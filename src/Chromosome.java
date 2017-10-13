@@ -4,11 +4,19 @@ public abstract class Chromosome<T> {
 
     ArrayList<T> genes;
 
+    public ArrayList<T> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(ArrayList<T> genes) {
+        this.genes = genes;
+    }
+
     public abstract double fitness();
 
     public abstract void flip();
 
-    public Chromosome<T> crossover(Chromosome<T> chromosome, int index)
+    public ArrayList<Chromosome> crossover(Chromosome<T> chromosome, int index)
     {
         return null;
     }
