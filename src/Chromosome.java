@@ -8,5 +8,8 @@ public abstract class Chromosome<T> {
 
     public abstract void flip();
 
-    public abstract Chromosome<T> crossover(int index);
+    public Chromosome<T> crossover(Chromosome<T> chromosome, int index)
+    {
+        return null;
+    }
 }
