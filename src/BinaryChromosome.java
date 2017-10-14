@@ -5,7 +5,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 
 
     static double limit = 200;
-    private Random random = new Random(10);
+    private Random random = new Random();
     private int length = 0;
     ArrayList<Integer> value = new ArrayList<>(length);
     ArrayList<Integer> weight = new ArrayList<>(length);
@@ -17,11 +17,11 @@ public class BinaryChromosome extends Chromosome<Integer> {
 
 
     @Override
-    public Chromosome init() {
+    public Chromosome init() {              // initializes the ArrayList of genes with random values
 
 
         for (int counter = 0; counter < length; ++counter) {
-            if (random.nextInt() < 5)
+            if (random.nextInt(10) < 5)
                 genes.add(0);
             else
                 genes.add(1);
@@ -30,7 +30,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
     }
 
     @Override
-    public double fitness() {
+    public double fitness() {               // calculates the value of the solution
         double valueSum = 0, weightSum = 0;
 
         for (int counter = 0; counter < genes.size(); ++counter) {
@@ -46,7 +46,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
     }
 
     @Override
-    public void flip(int index) {
+    public void flip(int index) {           // flips the value 0/1 in a specific index
         if (genes.get(index) == 1)
             genes.set(index, 0);
         else
