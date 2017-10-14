@@ -116,7 +116,7 @@ public class GeneticAlgorithm {
 
     private void selection()
     {
-        TreeMap<Double,Chromosome> cumulativetree= new TreeMap<>();
+        TreeMap<Double, Chromosome> cumulativetree = new TreeMap<>();
         double range = 0;
 
         for (Chromosome c : population) {
