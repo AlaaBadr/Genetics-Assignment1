@@ -1,28 +1,15 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class BinaryChromosome extends Chromosome<Integer> {
+public class BinaryChromosome extends Chromosome<Integer>{
 
 
     private Random random = new Random();
-    private int length = 0;
     private static ArrayList<Integer> value = new ArrayList();
     private static ArrayList<Integer> weight = new ArrayList();
     private static double limit = 200;
 
     BinaryChromosome() {}
-
-    BinaryChromosome(int length) {
-        this.length = length;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
 
     public static double getLimit() {
         return limit;
@@ -60,9 +47,9 @@ public class BinaryChromosome extends Chromosome<Integer> {
                 genes.add(1);
         }
 
-        Chromosome<Integer> chromosome = new BinaryChromosome(length);
+        Chromosome<Integer> chromosome = new BinaryChromosome();
+        chromosome.setLength(length);
         chromosome.genes = this.genes;
-
 
         return chromosome;
     }

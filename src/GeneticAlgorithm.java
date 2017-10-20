@@ -4,19 +4,23 @@ import java.util.Random;
 
 public class GeneticAlgorithm {
 
-    private int minimum = 0, maximum, chromosomeLength, maxGenerations;
-    private double crossoverP = 0.4, mutationP = 0.1;
+    private int minimum, popSize, chromosomeLength, maxGenerations;
+    private double crossoverP, mutationP;
     private ArrayList<Chromosome> population, selected, offsprings;
     private ReplacementStrategy replacer;
 
     public GeneticAlgorithm()
     {
-
+        this.minimum = 0;
+        this.popSize = 500;
+        this.maxGenerations = 1500;
+        this.crossoverP = 0.4;
+        this.mutationP = 0.001;
     }
 
-    public GeneticAlgorithm(int minimum, int maximum, double crossoverP, double mutationP, ArrayList<Chromosome> population, ArrayList<Chromosome> offsprings, ReplacementStrategy replacer) {
+    public GeneticAlgorithm(int minimum, int popSize, double crossoverP, double mutationP, ArrayList<Chromosome> population, ArrayList<Chromosome> offsprings, ReplacementStrategy replacer) {
         this.minimum = minimum;
-        this.maximum = maximum;
+        this.popSize = popSize;
         this.crossoverP = crossoverP;
         this.mutationP = mutationP;
         this.population = population;
@@ -48,12 +52,12 @@ public class GeneticAlgorithm {
         this.minimum = minimum;
     }
 
-    public int getMaximum() {
-        return maximum;
+    public int getPopSize() {
+        return popSize;
     }
 
-    public void setMaximum(int maximum) {
-        this.maximum = maximum;
+    public void setPopSize(int popSize) {
+        this.popSize = popSize;
     }
 
     public double getCrossoverP() {
@@ -106,16 +110,17 @@ public class GeneticAlgorithm {
 
     public void init(Chromosome temp)
     {
-        for(int i=0; i<maximum; i++)
+        for(int i = 0; i< popSize; i++)
         {
             temp = temp.init();
             population.add(temp);
         }
-        chromosomeLength = population.get(0).genes.size();
+        chromosomeLength = population.get(0).getLength();
     }
 
     private void selection()
     {
+        selected.clear();
         TreeMap<Double, Chromosome> cumulativetree = new TreeMap<>();
         double range = 0;
 
@@ -137,6 +142,7 @@ public class GeneticAlgorithm {
 
     private void crossover()
     {
+        offsprings.clear();
         Random rand = new Random();
         ArrayList<Chromosome> children;
         for(int i=0; i<selected.size(); i+=2)
@@ -160,8 +166,10 @@ public class GeneticAlgorithm {
     {
         for (Chromosome offspring : offsprings) {
             for (int j = 0; j < chromosomeLength; j++) {
-                if (Math.random() <= mutationP)
+                double mutate = Math.random();
+                if (mutate <= mutationP) {
                     offspring.flip(j);
+                }
             }
         }
     }

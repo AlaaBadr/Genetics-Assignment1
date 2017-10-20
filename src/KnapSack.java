@@ -1,47 +1,65 @@
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class KnapSack {
 
     private static GeneticAlgorithm alg;
     private static Chromosome chromosome;
 
-    private static void inputFile()
+    private static void inputFile(Scanner input)
     {
+        ArrayList<Integer> values = new ArrayList<>();
+        ArrayList<Integer> weights = new ArrayList<>();
 
+        chromosome.setLength(input.nextInt());
+        ((BinaryChromosome)chromosome).setLimit(input.nextInt());
+
+        for(int i=0; i<chromosome.getLength(); i++)
+        {
+            weights.add(input.nextInt());
+            values.add(input.nextInt());
+        }
+
+        ((BinaryChromosome)chromosome).setWeight(weights);
+        ((BinaryChromosome)chromosome).setValue(values);
     }
 
     private static void output()
     {
-        for(int i=0; i<alg.getPopulation().size(); i++)
+        //Collections.sort(alg.getPopulation(), Comparator.comparingDouble(Chromosome::fitness));
+        double maxValue = 0;
+        Chromosome best = null;
+        for(Chromosome c: alg.getPopulation() )
         {
-            System.out.println(alg.getPopulation().get(i).genes);
+            if(c.fitness()>maxValue)
+            {
+                maxValue = c.fitness();
+                best = c;
+            }
         }
+        System.out.println(best.fitness());
     }
 
-    public static void main(String[] args) {
-        chromosome = new BinaryChromosome(3);
-        alg = new GeneticAlgorithm();
-        alg.setPopulation(new ArrayList<Chromosome>());
-        alg.setSelected(new ArrayList<Chromosome>());
-        alg.setOffsprings(new ArrayList<Chromosome>());
-        alg.setReplacer(new GenerationalReplacement());
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner input = new Scanner(new File("input_exp.txt"));
+        int test_cases = input.nextInt();
 
-        alg.setMaximum(3);
-        ((BinaryChromosome)chromosome).setLimit(10.0);
-        ArrayList<Integer> values = new ArrayList<>();
-        values.add(4);
-        values.add(6);
-        values.add(3);
-        ((BinaryChromosome)chromosome).setValue(values);
-        ArrayList<Integer> weights = new ArrayList<>();
-        weights.add(4);
-        weights.add(7);
-        weights.add(5);
-        ((BinaryChromosome)chromosome).setWeight(weights);
+        for(int i=0; i<test_cases; i++)
+        {
+            chromosome = new BinaryChromosome();
+            alg = new GeneticAlgorithm();
+            alg.setPopulation(new ArrayList<Chromosome>());
+            alg.setSelected(new ArrayList<Chromosome>());
+            alg.setOffsprings(new ArrayList<Chromosome>());
+            alg.setReplacer(new GenerationalReplacement());
 
-        inputFile();
-        alg.init(chromosome);
-        alg.run();
-        output();
+            inputFile(input);
+            alg.init(chromosome);
+            alg.run();
+            System.out.print("Case "+(i+1)+": ");
+            output();
+        }
+        input.close();
     }
 }
